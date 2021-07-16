@@ -22,12 +22,12 @@ class Logger
     @logs = []
   end
 
-  def timeout?(log_time)
+  def time_out?(log_time)
     (Time.now - log_time) < 5 
   end
 
-  def shouldAlert(msg)
-    return false if @logs.any? { |log| log[:msg] == msg && timeout?(log[:time]) }  
+  def should_alert(msg)
+    return false if @logs.any? { |log| log[:msg] == msg && time_out?(log[:time]) }
 
     clear_cache 
     @logs << { msg: msg, time: Time.now }
@@ -50,25 +50,25 @@ end
 
 puts "First Set of Test Cases - No Cache check"
 logger = Logger.new(5)
-format_result('foo', logger.shouldAlert('foo'), true)
-format_result('bar', logger.shouldAlert('bar'), true)
-format_result('foo', logger.shouldAlert('foo'), false)
-format_result('bar', logger.shouldAlert('bar'), false) 
+format_result('foo', logger.should_alert('foo'), true)
+format_result('bar', logger.should_alert('bar'), true)
+format_result('foo', logger.should_alert('foo'), false)
+format_result('bar', logger.should_alert('bar'), false)
 puts '...Sleeping for 5 seconds'
 sleep(5)
-format_result('foo', logger.shouldAlert('foo'), true)
+format_result('foo', logger.should_alert('foo'), true)
 
-# 2. Can you clean up old cache every time `shouldAlert` method is triggered
+# 2. Can you clean up old cache every time `should_alert` method is triggered
 # assumption:
 # pop the oldest log by time when new log entries are going to be added to keep cache size limit?
 
 puts "\n\nSecond Set of Test Cases - Cache Check"
 logger = Logger.new(4)
-format_result('foo', logger.shouldAlert('foo'), true)
-format_result('bar', logger.shouldAlert('bar'), true)
-format_result('foo2', logger.shouldAlert('foo2'), true)
-format_result('bar2', logger.shouldAlert('bar2'), true) 
-format_result('foo3', logger.shouldAlert('foo3'), true) 
+format_result('foo', logger.should_alert('foo'), true)
+format_result('bar', logger.should_alert('bar'), true)
+format_result('foo2', logger.should_alert('foo2'), true)
+format_result('bar2', logger.should_alert('bar2'), true)
+format_result('foo3', logger.should_alert('foo3'), true)
 puts '...Removing Old Cache Value'
-format_result('foo', logger.shouldAlert('foo'), true)
-format_result('bar', logger.shouldAlert('bar'), true)
+format_result('foo', logger.should_alert('foo'), true)
+format_result('bar', logger.should_alert('bar'), true)
