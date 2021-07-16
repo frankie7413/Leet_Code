@@ -36,6 +36,7 @@ class Logger
 
   def clear_cache
     return if @logs.empty? || @logs.size < @cache_size || @logs.size == 1
+
     @logs.sort_by! { |log| log[:time] }.shift
   end
 end
@@ -47,6 +48,7 @@ def format_result(msg, alert, assertion)
   puts "Success"
 end
 
+puts "First Set of Test Cases - No Cache check"
 logger = Logger.new(5)
 format_result('foo', logger.shouldAlert('foo'), true)
 format_result('bar', logger.shouldAlert('bar'), true)
@@ -57,8 +59,10 @@ sleep(5)
 format_result('foo', logger.shouldAlert('foo'), true)
 
 # 2. Can you clean up old cache every time `shouldAlert` method is triggered
-# assuming this will pop the oldest elment each call? 
-puts "\n\nSecond Set of Test Cases"
+# assumption: pop the oldest log by time  when new log new log entries are
+# going to be added to keep cache size limit?
+
+puts "\n\nSecond Set of Test Cases - Cache Check"
 logger = Logger.new(4)
 format_result('foo', logger.shouldAlert('foo'), true)
 format_result('bar', logger.shouldAlert('bar'), true)
