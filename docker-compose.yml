@@ -1,0 +1,7 @@
+version: '3'
+services:
+  web:
+    image: ruby:test
+    command: sleep infinity
+    volumes:
+      - .:/myapp
