@@ -19,7 +19,7 @@
 class Logger
   def initialize(size)
     @cache_size = size 
-    @logs = []
+    @logs = {}
   end
 
   def time_out?(log_time)
@@ -27,17 +27,25 @@ class Logger
   end
 
   def should_alert(msg)
-    return false if @logs.any? { |log| log[:msg] == msg && time_out?(log[:time]) }
+    return false unless valid_message?(msg)
 
-    clear_cache 
-    @logs << { msg: msg, time: Time.now }
+    clear_cache
+    @logs[msg.to_sym] = Time.now
+    true
+  end
+
+  def valid_message?(msg)
+    log_time = @logs[msg.to_sym]
+    return false if !log_time.nil? && time_out?(log_time) 
+
     true
   end
 
   def clear_cache
     return if @logs.empty? || @logs.size < @cache_size || @logs.size == 1
 
-    @logs.sort_by! { |log| log[:time] }.shift
+    @logs.sort_by { |k,v| v }.to_h
+    @logs.shift
   end
 end
 
@@ -57,18 +65,25 @@ format_result('bar', logger.should_alert('bar'), false)
 puts '...Sleeping for 5 seconds'
 sleep(5)
 format_result('foo', logger.should_alert('foo'), true)
+format_result('bar', logger.should_alert('bar'), true)
 
 # 2. Can you clean up old cache every time `should_alert` method is triggered
 # assumption:
 # pop the oldest log by time when new log entries are going to be added to keep cache size limit?
 
 puts "\n\nSecond Set of Test Cases - Cache Check"
-logger = Logger.new(4)
+logger = Logger.new(5)
 format_result('foo', logger.should_alert('foo'), true)
 format_result('bar', logger.should_alert('bar'), true)
 format_result('foo2', logger.should_alert('foo2'), true)
 format_result('bar2', logger.should_alert('bar2'), true)
 format_result('foo3', logger.should_alert('foo3'), true)
 puts '...Removing Old Cache Value'
+format_result('foo4', logger.should_alert('foo4'), true)
+format_result('bar3', logger.should_alert('bar3'), true)
+puts '...re-added to hash return true under 5 seconds'
 format_result('foo', logger.should_alert('foo'), true)
 format_result('bar', logger.should_alert('bar'), true)
+puts '...return false under 5 seconds'
+format_result('foo', logger.should_alert('foo'), false)
+format_result('bar', logger.should_alert('bar'), false)
