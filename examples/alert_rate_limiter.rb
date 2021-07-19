@@ -78,12 +78,15 @@ format_result('bar', logger.should_alert('bar'), true)
 format_result('foo2', logger.should_alert('foo2'), true)
 format_result('bar2', logger.should_alert('bar2'), true)
 format_result('foo3', logger.should_alert('foo3'), true)
+
 puts '...Removing Old Cache Value'
 format_result('foo4', logger.should_alert('foo4'), true)
 format_result('bar3', logger.should_alert('bar3'), true)
+
 puts '...re-added to hash return true under 5 seconds'
 format_result('foo', logger.should_alert('foo'), true)
 format_result('bar', logger.should_alert('bar'), true)
+
 puts '...return false under 5 seconds'
 format_result('foo', logger.should_alert('foo'), false)
 format_result('bar', logger.should_alert('bar'), false)
