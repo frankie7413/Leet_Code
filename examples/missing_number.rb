@@ -1,13 +1,13 @@
 # https://leetcode.com/problems/missing-number/
 # Missing Number:
-# 
+#
 # Question:
 # An array is supposed to have n+1 uniq unsorted numbers e.g.[0,1,2..n]
 # But there are only n numbers in it. Find the missing one.
-# 
+#
 # Verification:Missing Number:
 
-# n size 
+# n size
 # [0,1,3]
 
 # The total should be n + 1 size therefore make array with range 0 to n to meet
@@ -28,8 +28,8 @@ end
 
 # Verification:
 
-def test_case(array, answer) 
-  found = find_missing_num(array) 
+def test_case(array, answer)
+  found = find_missing_num(array)
   return puts 'Success' if found == answer
 
   puts "Failed at: #{array} with expected return: #{answer}"

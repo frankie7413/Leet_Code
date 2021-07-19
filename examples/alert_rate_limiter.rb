@@ -5,7 +5,7 @@
 # 2. Write a class with proper initialization and a `shouldAlert` method returns True/False
 
 # Verification:
- 
+
 # import time
 # logger = Logger(5);
 # print logger.shouldAlert("foo") #returns true;
@@ -18,12 +18,12 @@
 
 class Logger
   def initialize(size)
-    @cache_size = size 
+    @cache_size = size
     @logs = {}
   end
 
   def time_out?(log_time)
-    (Time.now - log_time) < 5 
+    (Time.now - log_time) < 5
   end
 
   def should_alert(msg)
@@ -36,7 +36,7 @@ class Logger
 
   def valid_message?(msg)
     log_time = @logs[msg.to_sym]
-    return false if !log_time.nil? && time_out?(log_time) 
+    return false if !log_time.nil? && time_out?(log_time)
 
     true
   end
