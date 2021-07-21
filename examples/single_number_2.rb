@@ -9,6 +9,7 @@
 # Each element in nums appears exactly three times except for one element which appears once.
 
 def test_case(input, output)
+  input = single_number(input)
   if input == output
     puts 'Passed'
   else
@@ -41,8 +42,8 @@ end
 
 puts 'Example 1: '
 nums = [2,2,3,2]
-test_case(single_number(nums), 3)
+test_case(nums, 3)
 
 puts 'Example 2: '
 nums = [0,1,0,1,0,1,99]
-test_case(single_number(nums), 99)
+test_case(nums, 99)
