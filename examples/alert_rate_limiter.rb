@@ -35,8 +35,7 @@ class Logger
   end
 
   def valid_message?(msg)
-    log_time = @logs[msg.to_sym]
-    return false if !log_time.nil? && time_out?(log_time)
+    return false if @logs.key?(msg.to_sym) && time_out?(@logs[msg.to_sym])
 
     true
   end
