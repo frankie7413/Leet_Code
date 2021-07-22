@@ -13,7 +13,7 @@
 def test_case(input, output)
   input = decode_string(input)
   if input == output
-    puts 'Passed'
+    puts "Passed"
   else
     puts "Failed: #{input} != #{output}"
   end
@@ -24,58 +24,40 @@ end
 # cc
 # 2 * cc
 # 3 * ( a + ( 2 * cc ) )
-#def decode_string(s)
-#  return s unless s.include?('[')
-#
-#  puts "Initial: #{s}"
-#  first_bracket = s.index('[')
-#  second_bracket = if s[(first_bracket + 1)..s.size].include?('[')
-#                     s.rindex(']')
-#                   else
-#                     s = s.delete(']')
-#                     s.size
-#                   end
-#
-#  result = s[(first_bracket + 1)..second_bracket]
-#
-#  prefix = if result.include?('[') && result.count(']') == 2
-#             puts result
-#             result[0..(result.index('[') - 1)].gsub(/\d+/, '')
-#           else
-#             ''
-#           end
-#  puts "Final Result: #{result}"
-#  puts "prefix: #{prefix}"
-#
-#  (prefix + decode_string(result)) * s[first_bracket - 1].to_i
-#end
-
+# Recusion solution with edge case for strings with inner brackets
 def decode_string(s)
   return s unless s.include?('[')
 
-  puts "Initial: #{s}"
-
-  # assuming no other brackets
+  inner_bracket = false
   first_bracket = s.index('[')
   second_bracket = s.index(']')
 
+  if s[(first_bracket + 1)..(second_bracket - 1)].include?('[')
+    inner_bracket = true
+    second_bracket = s.rindex(']')
+  end
+
   result = s[(first_bracket + 1)..(second_bracket - 1)]
-
-  puts "Final Result: #{result}"
-
-
+  # use regex to remove any brackets or digits
   prefix = (first_bracket - 1).zero? ? '' : s[0..first_bracket].gsub(/\d+|\[|\]/, '')
-  prefix + result * s[first_bracket - 1].to_i + decode_string(s[(second_bracket + 1)..s.size])
+  if inner_bracket
+    (prefix + decode_string(result)) * s[first_bracket - 1].to_i
+  else
+    prefix + result * s[first_bracket - 1].to_i + decode_string(s[(second_bracket + 1)..s.size])
+  end
 end
 
 # Example 1
 test_case("3[a]2[bc]", "aaabcbc")
 
 # Example 2
-# test_case("3[a2[c]]", "accaccacc")
+test_case("3[a2[c]]", "accaccacc")
 
 # Example 3
 test_case("2[abc]3[cd]ef", "abcabccdcdcdef")
 
 # Example 4
 test_case("abc3[cd]xyz", "abccdcdcdxyz")
+
+# Example 5 with string after inner brackets
+test_case("3[a2[c]xyz]", "accxyzaccxyzaccxyz")
