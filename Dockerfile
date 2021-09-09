@@ -1,5 +1,7 @@
 FROM ruby:2.7
 
+RUN apt-get update && apt-get install vim -y
+
 RUN mkdir /myapp
 WORKDIR /myapp
 
