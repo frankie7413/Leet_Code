@@ -30,12 +30,12 @@ class Logger
     return false unless valid_message?(msg)
 
     clear_cache
-    @logs[msg.to_sym] = Time.now
+    @logs[msg] = Time.now
     true
   end
 
   def valid_message?(msg)
-    return false if @logs.key?(msg.to_sym) && time_out?(@logs[msg.to_sym])
+    return false if @logs.key?(msg) && time_out?(@logs[msg])
 
     true
   end

@@ -1,7 +1,7 @@
 version: '3'
 services:
   web:
-    image: ruby:test
+    image: ruby:leet
     command: sleep infinity
     volumes:
       - .:/myapp

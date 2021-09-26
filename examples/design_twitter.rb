@@ -22,6 +22,8 @@
 # // User 1's news feed should return a list with 1 tweet id -> [5],
 # since user 1 is no longer following user 2.
 
+require 'set'
+
 # twitter object to track tweets, followers and return news feed.
 class Twitter
   attr_reader :tweets, :followers
@@ -63,7 +65,7 @@ class Twitter
   # :type followee_id: Integer
   # :rtype: Void
   def follow(follower_id, followee_id)
-    return if !@followers[follower_id].nil? && @followers[follower_id].include?(followee_id)
+    return if @followers[follower_id] && @followers[follower_id].include?(followee_id)
 
     @followers[follower_id] ||= Set.new
     @followers[follower_id] << followee_id
@@ -80,30 +82,30 @@ class Twitter
   end
 end
 
-# twitter = Twitter.new
-# twitter.post_tweet(1, 5)
-# twitter.get_news_feed(1)
-# twitter.follow(1, 2)
-# twitter.post_tweet(2, 6)
-# twitter.get_news_feed(1)
-# twitter.unfollow(1, 2)
-# twitter.get_news_feed(1)
-# twitter.follow(1, 4)
-# twitter.get_news_feed(1)
+twitter = Twitter.new
+twitter.post_tweet(1, 5)
+twitter.get_news_feed(1)
+twitter.follow(1, 2)
+twitter.post_tweet(2, 6)
+puts twitter.get_news_feed(1)
+twitter.unfollow(1, 2)
+twitter.get_news_feed(1)
+twitter.follow(1, 4)
+twitter.get_news_feed(1)
 
 # test run
-twitter = Twitter.new
-
-twitter.post_tweet(1, 5)
-twitter.post_tweet(1, 3)
-twitter.post_tweet(1, 101)
-twitter.post_tweet(1, 13)
-twitter.post_tweet(1, 10)
-twitter.post_tweet(1, 2)
-twitter.post_tweet(1, 94)
-twitter.post_tweet(1, 505)
-twitter.post_tweet(1, 333)
-twitter.post_tweet(1, 22)
-twitter.post_tweet(1, 11)
-
-twitter.get_news_feed(1)
+#twitter = Twitter.new
+#
+#twitter.post_tweet(1, 5)
+#twitter.post_tweet(1, 3)
+#twitter.post_tweet(1, 101)
+#twitter.post_tweet(1, 13)
+#twitter.post_tweet(1, 10)
+#twitter.post_tweet(1, 2)
+#twitter.post_tweet(1, 94)
+#twitter.post_tweet(1, 505)
+#twitter.post_tweet(1, 333)
+#twitter.post_tweet(1, 22)
+#twitter.post_tweet(1, 11)
+#
+#twitter.get_news_feed(1)
