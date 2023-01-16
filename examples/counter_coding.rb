@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
+# counter tracking class
 class Record
+  def intialize; end
 end
 
 # AC
