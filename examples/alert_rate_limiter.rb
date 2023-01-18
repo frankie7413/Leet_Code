@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Alert Rate Limiter:
 # Question:
 # We have a monitoring system that send out alert when there is an error.
@@ -16,34 +18,29 @@
 # time.sleep(5)
 # print logger.shouldAlert("foo"); returns true;
 
+# logger monitor class
 class Logger
   def initialize(size)
     @cache_size = size
     @logs = {}
   end
 
-  def time_out?(log_time)
-    (Time.now - log_time) < 5
+  def time_out?(alert)
+    (Time.now - @logs[alert]) > 5
   end
 
-  def should_alert(msg)
-    return false unless valid_message?(msg)
-
+  def should_alert(alert)
     clear_cache
-    @logs[msg] = Time.now
-    true
-  end
+    return time_out?(alert) if @logs.key?(alert)
 
-  def valid_message?(msg)
-    return false if @logs.key?(msg) && time_out?(@logs[msg])
-
+    @logs[alert] = Time.now
     true
   end
 
   def clear_cache
-    return if @logs.empty? || @logs.size < @cache_size || @logs.size == 1
+    return if @logs.keys.size < @cache_size
 
-    @logs.sort_by { |k,v| v }.to_h
+    # assuming no race condition on insert
     @logs.shift
   end
 end
@@ -52,10 +49,10 @@ def format_result(msg, alert, assertion)
   puts "Running with #{msg}..."
   return puts "Error expected: #{assertion} but recived: #{alert}" if alert != assertion
 
-  puts "Success"
+  puts 'Success'
 end
 
-puts "First Set of Test Cases - No Cache check"
+puts 'First Set of Test Cases - No Cache check'
 logger = Logger.new(5)
 format_result('foo', logger.should_alert('foo'), true)
 format_result('bar', logger.should_alert('bar'), true)
